@@ -6,12 +6,20 @@ import type { WallpaperCardProps } from "~types/WallpaperProps"
 
 import SkeletonLoader from "./Loader/skeleton-loader"
 import WallpaperCard from "./WallpaperCard"
+import { Button } from "./ui/button"
 
 export default function Wallpapers() {
   const [wallpapers, setWallpapers] = useState<WallpaperCardProps[]>([])
   const [loading, setloading] = useState(false)
 
   const userId = localStorage.getItem("userId")
+
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("userId")
+    // Reload the page to reflect the logout state
+    window.location.reload()
+  }
 
   async function fetchHandler() {
     setloading(true)
@@ -35,7 +43,15 @@ export default function Wallpapers() {
   }
 
   return (
-    <div className="w-full h-full flex items-center flex-col text-lg px-6 space-y-6">
+    <div className="w-full h-full flex items-center flex-col text-lg px-6 space-y-6 relative">
+      <Button
+        variant="outline"
+        onClick={handleLogout}
+        className="absolute top-4 right-4 px-4 py-2 rounded-lg"
+      >
+        Logout
+      </Button>
+
       <h1 className="text-2xl font-semibold flex justify-center items-center mt-6">
         <span className="font-bold ml-1">Your Wallpapers</span>
         <img src={logo} alt="gitpaper-logo" className="ml-1 size-10" />

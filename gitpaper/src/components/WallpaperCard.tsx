@@ -31,7 +31,7 @@ export default function WallpaperCard({
 
       {isHovered && (
         <div className="absolute top-0 left-0 z-10 w-full h-full flex justify-center items-center bg-black/50">
-          <Button onClick={handleSetWallpaper}>Set Wallpaper</Button>
+          <Button onClick={handleSetWallpaper} className="rounded-lg">Set Wallpaper</Button>
         </div>
       )}
     </div>
