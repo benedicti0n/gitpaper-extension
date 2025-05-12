@@ -67,42 +67,45 @@ export default function NewTab() {
             }}
         >
             {bentoImage && (
-                <img
-                    src={bentoImage}
-                    alt="Bento Overlay"
-                    style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        width: "60%",
-                        objectFit: "contain"
-                    }}
-                />
-            )}
+                <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                    <img
+                        src={bentoImage}
+                        alt="Bento Overlay"
+                        style={{
+                            width: "60%",
+                            objectFit: "contain"
+                        }}
+                    />
 
-            {/* Google Search */}
-            <form
-                action="https://www.google.com/search"
-                method="GET"
-                style={{ zIndex: 10, marginBottom: "30px", width: "80%", maxWidth: "600px" }}
-            >
-                <input
-                    type="text"
-                    name="q"
-                    placeholder="Search with Google or enter address"
-                    style={{
-                        width: "100%",
-                        padding: "15px",
-                        borderRadius: "30px",
-                        border: "none",
-                        fontSize: "16px",
-                        boxShadow: "0 2px 6px rgba(0,0,0,0.2)"
-                    }}
-                />
-            </form>
+                    {/* // Google Search */}
+                    <form
+                        action="https://www.google.com/search"
+                        method="GET"
+                        style={{ zIndex: 10, width: "60%" }}
+                    >
+                        <div style={{ backgroundColor: "red", width: "100%", padding: "5px", borderRadius: "30px" }}>
+                            <input
+                                type="text"
+                                name="q"
+                                placeholder="Search with Google or enter address"
+                                style={{
+                                    width: "calc(100%)",
+                                    padding: "15px",
+                                    borderRadius: "30px",
+                                    border: "none",
+                                    fontSize: "16px",
+                                    boxSizing: "border-box"
+                                }}
+                            />
+                        </div>
+                    </form>
+                </div>
+            )
+            }
 
-            {/* Shortcut Tabs */}
+
+
+            {/* Shortcut Tabs
             <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", zIndex: 10 }}>
                 {shortcuts.map((item) => (
                     <a
@@ -140,7 +143,7 @@ export default function NewTab() {
                 >
                     ➕
                 </button>
-            </div>
-        </div>
+            </div> */}
+        </div >
     )
 }
