@@ -34,6 +34,22 @@ export default function NewTab() {
             }
         })
 
+        // Set document title and favicon
+        document.title = "New Tab"
+
+        // Remove any existing favicon
+        const existingFavicon = document.querySelector("link[rel*='icon']")
+        if (existingFavicon) {
+            existingFavicon.remove()
+        }
+
+        // Add new favicon
+        const favicon = document.createElement('link')
+        favicon.rel = 'icon'
+        favicon.type = 'image/png'
+        favicon.href = 'https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg'
+        document.head.appendChild(favicon)
+
         document.body.style.margin = "0"
         document.body.style.padding = "0"
         document.documentElement.style.margin = "0"
