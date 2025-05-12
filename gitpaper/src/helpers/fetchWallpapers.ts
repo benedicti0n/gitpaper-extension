@@ -1,5 +1,7 @@
 import axios from "axios"
 
+const WEBAPP_URL = process.env.PLASMO_PUBLIC_WEBAPP_URL
+
 export async function fetchWallpapers(userId: string) {
   if (!userId) {
     alert("No userId found in localStorage")
@@ -8,7 +10,7 @@ export async function fetchWallpapers(userId: string) {
 
   try {
     const response = await axios.get(
-      `http://localhost:3000/api/v1/extension/wallpapers?userId=${userId}`
+      `${WEBAPP_URL}/api/v1/extension/wallpapers?userId=${userId}`
     )
 
     const { wallpapers } = response.data

@@ -1,13 +1,16 @@
 import axios from "axios"
 
-import type { UserProps } from "~types/UserProps"
+const WEBAPP_URL = process.env.PLASMO_PUBLIC_WEBAPP_URL
 
-const url = `${process.env.WEBAPP_URL}/v1/extension/login`
+interface UserProps {
+  username: String
+  password: String
+}
 
 export async function checkUser({ username, password }: UserProps) {
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/v1/extension/login",
+      `${WEBAPP_URL}/api/v1/extension/login`,
       {
         username,
         password
