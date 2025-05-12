@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react"
+import type { IColorPallete } from "~colorPalletes"
+import useGetTheme from "~hooks/useGetTheme"
 
 export default function NewTab() {
     const [backgroundImage, setBackgroundImage] = useState<string | null>(null)
     const [bentoImage, setBentoImage] = useState<string | null>(null)
+    const [currentPalette, setCurrentPalette] = useState<IColorPallete>()
     const [shortcuts, setShortcuts] = useState<
         { label: string; url: string; icon: string }[]
     >([
@@ -12,6 +15,8 @@ export default function NewTab() {
         { label: "GitHub", url: "https://github.com", icon: "💻" },
         { label: "ChatGPT", url: "https://chat.openai.com", icon: "🧠" }
     ])
+
+    const theme = useGetTheme()
 
     // Load from storage
     useEffect(() => {
@@ -33,7 +38,9 @@ export default function NewTab() {
         document.body.style.padding = "0"
         document.documentElement.style.margin = "0"
         document.documentElement.style.padding = "0"
-    }, [])
+
+        setCurrentPalette(theme)
+    }, [theme])
 
     // Add new shortcut
     const addShortcut = () => {
@@ -67,12 +74,14 @@ export default function NewTab() {
             }}
         >
             {bentoImage && (
-                <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <div style={{
+                    width: "53%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                }}>
                     <img
                         src={bentoImage}
                         alt="Bento Overlay"
                         style={{
-                            width: "60%",
+                            width: "100%",
                             objectFit: "contain"
                         }}
                     />
@@ -81,20 +90,27 @@ export default function NewTab() {
                     <form
                         action="https://www.google.com/search"
                         method="GET"
-                        style={{ zIndex: 10, width: "60%" }}
+                        style={{ zIndex: 10, width: "100%", paddingLeft: "1.75rem", paddingRight: "1.75rem", boxSizing: "border-box" }}
                     >
-                        <div style={{ backgroundColor: "red", width: "100%", padding: "5px", borderRadius: "30px" }}>
+                        <div style={{
+                            width: "100%", padding: "5px", borderRadius: "20px", boxSizing: "border-box",
+                            background: `linear-gradient(to bottom right, ${currentPalette.main4}, ${currentPalette.main2}, ${currentPalette.main4})`,
+                            boxShadow: `0px 5px 10px -3px ${currentPalette.main3}`,
+                            color: `${currentPalette.textColor}`
+                        }}>
                             <input
                                 type="text"
                                 name="q"
                                 placeholder="Search with Google or enter address"
                                 style={{
+                                    backgroundColor: `${currentPalette.bgColor}`,
                                     width: "calc(100%)",
-                                    padding: "15px",
-                                    borderRadius: "30px",
+                                    padding: "16px",
+                                    borderRadius: "16px",
                                     border: "none",
-                                    fontSize: "16px",
-                                    boxSizing: "border-box"
+                                    fontSize: "14px",
+                                    boxSizing: "border-box",
+                                    outline: "none"
                                 }}
                             />
                         </div>

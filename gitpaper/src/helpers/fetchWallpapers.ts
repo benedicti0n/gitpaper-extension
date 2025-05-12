@@ -12,6 +12,7 @@ export async function fetchWallpapers(userId: string) {
     )
 
     const { wallpapers } = response.data
+    console.log(wallpapers, "wallpapers")
     return wallpapers
   } catch (error) {
     alert("fetching failed")

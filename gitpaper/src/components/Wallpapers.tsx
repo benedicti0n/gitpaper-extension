@@ -63,6 +63,7 @@ export default function Wallpapers() {
             key={index}
             bentoLink={w?.bentoLink}
             backgroundImageLink={w?.backgroundImageLink}
+            theme={w?.theme}
           />
         ))}
       </div>

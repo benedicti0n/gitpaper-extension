@@ -1,11 +1,17 @@
-import { useEffect, useState } from "react"
-
-import type { WallpaperCardProps } from "~types/WallpaperProps"
+import { useState } from "react"
 import { Button } from "./ui/button"
+
+export interface WallpaperCardProps {
+  backgroundImageLink: string
+  bentoLink: string
+  theme: string
+}
+
 
 export default function WallpaperCard({
   backgroundImageLink,
-  bentoLink
+  bentoLink,
+  theme
 }: WallpaperCardProps) {
   const [isHovered, setIsHovered] = useState(false)
 
@@ -13,7 +19,8 @@ export default function WallpaperCard({
     chrome.storage.local.set({
       newtabWallpaper: {
         backgroundImage: backgroundImageLink,
-        bentoImage: bentoLink
+        bentoImage: bentoLink,
+        theme: theme
       }
     }, () => {
       chrome.tabs.create({ url: "chrome://newtab" }) // triggers override

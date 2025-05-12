@@ -5,10 +5,14 @@ import React, { useState } from "react"
 import { Button } from "~components/ui/button"
 import Wallpapers from "~components/Wallpapers"
 import { checkUser } from "~helpers/checkUserInDb"
-import type { UserProps } from "~types/UserProps"
 
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
+
+interface UserProps {
+  username: String
+  password: String
+}
 
 export default function Login() {
   const [username, setUsername] = useState("")
