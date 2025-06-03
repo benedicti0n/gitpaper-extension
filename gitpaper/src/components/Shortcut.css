@@ -1,0 +1,73 @@
+/* Shortcut Container */
+.shortcut-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 10;
+  padding: 20px;
+  margin: 0 20px;
+  position: relative;
+}
+
+/* Shortcut Item */
+.shortcut-item {
+  cursor: move;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.shortcut-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Remove Button */
+.remove-button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.remove-button:hover {
+  color: white;
+}
+
+/* Side Label */
+.shortcut-side-label {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: white;
+  text-transform: capitalize;
+}
+
+/* Add Shortcut Button */
+.add-shortcut-button {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px dashed white;
+  color: white;
+  border-radius: 16px;
+  padding: 12px;
+  min-width: 80px;
+  font-size: 18px;
+  margin-top: auto;
+  transition: all 0.2s;
+}
+
+.add-shortcut-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
