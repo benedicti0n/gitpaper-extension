@@ -130,7 +130,7 @@ export default function NewTab() {
                     justifyContent: "center"
                 }}
             >
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
                     <Shortcut
                         side="left"
                         shortcuts={leftShortcuts}

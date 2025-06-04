@@ -1,43 +1,143 @@
 /* Shortcut Container */
 .shortcut-container {
+  max-height: 73%;
   display: flex;
   flex-direction: column;
   gap: 20px;
   z-index: 10;
-  padding: 20px;
-  margin: 0 20px;
+  margin: 1.5rem 10px 0px 10px;
   position: relative;
+  border: 1px solid red;
 }
 
 /* Shortcut Item */
 .shortcut-item {
   cursor: move;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
+  width: 80px;
+  height: 80px;
+  /* padding: 10px; */
   border-radius: 8px;
   position: relative;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  text-align: center;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .shortcut-item:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Remove Button */
-.remove-button {
+/* Menu Button */
+.shortcut-item {
+  position: relative;
+}
+
+.menu-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 4px;
+  z-index: 10;
+}
+
+.menu-button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  color: white;
+  padding: 0;
   cursor: pointer;
-  padding: 4px;
-  transition: color 0.2s;
+  transition: all 0.2s ease;
+  opacity: 0;
+  visibility: hidden;
 }
 
-.remove-button:hover {
+.shortcut-item:hover .menu-button {
+  opacity: 1;
+  visibility: visible;
+}
+
+.menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-button svg {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.menu-button:hover svg {
   color: white;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: fixed;
+  background: #2d3748;
+  border-radius: 6px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  min-width: 180px;
+  z-index: 1000;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeIn 0.15s ease-out;
+}
+
+/* Position the dropdown relative to the viewport */
+.menu-container[data-visible] .dropdown-menu {
+  position: fixed;
+  top: var(--menu-top);
+  left: var(--menu-left);
+}
+
+.dropdown-menu button {
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-menu button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-menu button.danger {
+  color: #ef4444;
+}
+
+.dropdown-menu button.danger:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Side Label */
