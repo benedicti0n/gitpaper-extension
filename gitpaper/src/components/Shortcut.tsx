@@ -88,7 +88,7 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
     e.stopPropagation();
     const newIsOpen = !isMenuOpen;
     setIsMenuOpen(newIsOpen);
-    
+
     if (newIsOpen && menuButtonRef.current) {
       const rect = menuButtonRef.current.getBoundingClientRect();
       if (menuRef.current) {
@@ -104,7 +104,7 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
   const handleAction = (e: React.MouseEvent, action: string) => {
     e.stopPropagation();
     setIsMenuOpen(false);
-    
+
     switch (action) {
       case 'edit':
         // Handle edit action
@@ -178,9 +178,9 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
           aria-expanded={isMenuOpen}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="6" r="2" fill="currentColor"/>
-            <circle cx="12" cy="12" r="2" fill="currentColor"/>
-            <circle cx="12" cy="18" r="2" fill="currentColor"/>
+            <circle cx="12" cy="6" r="2" fill="currentColor" />
+            <circle cx="12" cy="12" r="2" fill="currentColor" />
+            <circle cx="12" cy="18" r="2" fill="currentColor" />
           </svg>
         </button>
         {isMenuOpen && (

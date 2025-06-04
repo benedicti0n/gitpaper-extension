@@ -172,7 +172,15 @@ export default function NewTab() {
                     )
                     }
 
-                    <Shortcut />
+                    <Shortcut
+                        side="right"
+                        shortcuts={rightShortcuts}
+                        setShortcuts={setRightShortcuts}
+                        onAddClick={() => {
+                            setModalSide('right');
+                            setIsModalOpen(true);
+                        }}
+                    />
                 </div>
 
                 <AddShortcutModal

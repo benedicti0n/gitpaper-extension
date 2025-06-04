@@ -28,18 +28,18 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         <form
             action="https://www.google.com/search"
             method="GET"
-            style={{ 
-                zIndex: 10, 
-                width: "100%", 
-                paddingLeft: "1.75rem", 
-                paddingRight: "1.75rem", 
-                boxSizing: "border-box" 
+            style={{
+                zIndex: 10,
+                width: "100%",
+                paddingLeft: "1.75rem",
+                paddingRight: "1.75rem",
+                boxSizing: "border-box"
             }}
         >
             <div style={{
-                width: "100%", 
-                padding: "5px", 
-                borderRadius: "20px", 
+                width: "100%",
+                padding: "5px",
+                borderRadius: "20px",
                 boxSizing: "border-box",
                 background: `linear-gradient(to bottom right, ${currentPalette.main4}, ${currentPalette.main2}, ${currentPalette.main4})`,
                 boxShadow: `0px 5px 10px -3px ${currentPalette.main3}`,
@@ -99,7 +99,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                             className="cursor-pointer"
                             onClick={onImageSearch}
                             title="Search by image"
-                        > 
+                        >
                             <img src={googleLens} alt="google-image" style={{ height: "20px", width: "20px" }} />
                         </div>
                     </div>
