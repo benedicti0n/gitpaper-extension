@@ -1,8 +1,9 @@
 import logo from "data-base64:~images/logo.png"
 import React, { useEffect, useState } from "react"
+import type { WallpaperCardProps } from "~types/WallpaperProps"
 
 import { fetchWallpapers } from "~helpers/fetchWallpapers"
-import type { WallpaperCardProps } from "~types/WallpaperProps"
+
 
 import SkeletonLoader from "./Loader/skeleton-loader"
 import WallpaperCard from "./WallpaperCard"
