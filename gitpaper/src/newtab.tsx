@@ -169,7 +169,7 @@ export default function NewTab() {
                     justifyContent: "center"
                 }}
             >
-                <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
+                <div className="Bento-and-shortcut" style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
                     <Shortcut
                         side="left"
                         shortcuts={leftShortcuts}

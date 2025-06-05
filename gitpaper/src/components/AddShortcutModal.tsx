@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import ReactDOM from 'react-dom';
 import type { ShortcutItem } from '~components/Shortcut';
 
 interface AddShortcutModalProps {
@@ -20,11 +20,9 @@ const AddShortcutModal: React.FC<AddShortcutModalProps> = ({ isOpen, onClose, on
       if (!url) return;
 
       try {
-        // Try to get favicon using Google's service
         const domain = new URL(url.startsWith('http') ? url : `https://${url}`).hostname;
         const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 
-        // Check if favicon exists
         const response = await fetch(faviconUrl);
         if (response.ok) {
           setIconUrl(faviconUrl);
@@ -35,9 +33,7 @@ const AddShortcutModal: React.FC<AddShortcutModalProps> = ({ isOpen, onClose, on
     };
 
     const timer = setTimeout(() => {
-      if (url) {
-        fetchFavicon();
-      }
+      if (url) fetchFavicon();
     }, 500);
 
     return () => clearTimeout(timer);
@@ -53,20 +49,19 @@ const AddShortcutModal: React.FC<AddShortcutModalProps> = ({ isOpen, onClose, on
     }
 
     try {
-      // Ensure URL has protocol
       const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
-      new URL(formattedUrl); // Validate URL
+      new URL(formattedUrl);
 
       const newShortcut: ShortcutItem = {
         id: Math.floor(Math.random() * 1000000).toString(),
         label: title.trim(),
         url: formattedUrl,
-        icon: iconUrl || '🔗' // Fallback to link emoji if no favicon
+        icon: iconUrl || '🔗',
+        side: 'left', // or 'right', adjust based on usage
       };
 
       onAdd(newShortcut);
 
-      // Reset form
       setTitle('');
       setUrl('');
       setIconUrl('');
@@ -78,99 +73,116 @@ const AddShortcutModal: React.FC<AddShortcutModalProps> = ({ isOpen, onClose, on
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  return ReactDOM.createPortal(
+    <div
+      style={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 9999
+      }}
+      onClick={onClose}
+    >
       <div
-        className="bg-white rounded-lg p-6 w-full max-w-md relative"
         onClick={(e) => e.stopPropagation()}
+        style={{
+          backgroundColor: '#fff',
+          borderRadius: '8px',
+          padding: '24px',
+          maxWidth: '400px',
+          width: '100%',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+          position: 'relative',
+          zIndex: 10000
+        }}
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            border: 'none',
+            background: 'transparent',
+            fontSize: '18px',
+            cursor: 'pointer',
+          }}
         >
           ✕
         </button>
 
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">Add New Shortcut</h2>
+        <h2 style={{ fontSize: '20px', marginBottom: '20px' }}>Add New Shortcut</h2>
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="title">
-              Title *
-            </label>
+          <div style={{ marginBottom: '16px' }}>
+            <label htmlFor="title" style={{ display: 'block', marginBottom: '6px' }}>Title *</label>
             <input
               id="title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="e.g., Google"
+              style={{
+                width: '100%',
+                padding: '8px',
+                border: '1px solid #ccc',
+                borderRadius: '4px'
+              }}
               required
             />
           </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-medium mb-2" htmlFor="url">
-              URL *
-            </label>
+          <div style={{ marginBottom: '16px' }}>
+            <label htmlFor="url" style={{ display: 'block', marginBottom: '6px' }}>URL *</label>
             <input
               id="url"
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="e.g., google.com or https://google.com"
+              style={{
+                width: '100%',
+                padding: '8px',
+                border: '1px solid #ccc',
+                borderRadius: '4px'
+              }}
               required
             />
           </div>
 
-          <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-medium mb-2">
-              Icon
-            </label>
-            <div className="flex items-center">
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', marginBottom: '6px' }}>Icon</label>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
               {iconUrl ? (
-                <img
-                  src={iconUrl}
-                  alt="Website icon"
-                  className="w-10 h-10 rounded-full border border-gray-200 mr-4"
-                />
+                <img src={iconUrl} alt="icon" style={{ width: 40, height: 40, marginRight: 10 }} />
               ) : (
-                <div className="w-10 h-10 rounded-full border border-gray-200 mr-4 flex items-center justify-center text-gray-400">
-                  🔗
-                </div>
+                <span style={{ width: 40, height: 40, marginRight: 10, display: 'flex', justifyContent: 'center', alignItems: 'center', border: '1px solid #ccc' }}>🔗</span>
               )}
-              <span className="text-sm text-gray-500">
+              <span style={{ fontSize: '12px', color: '#777' }}>
                 {iconUrl ? 'Favicon detected' : 'Default icon will be used'}
               </span>
             </div>
           </div>
 
           {error && (
-            <div className="mb-4 text-red-500 text-sm">
+            <div style={{ color: 'red', marginBottom: '16px' }}>
               {error}
             </div>
           )}
 
-          <div className="flex justify-end space-x-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
-            >
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <button type="button" onClick={onClose} style={{ padding: '8px 16px', backgroundColor: '#eee', border: 'none', borderRadius: '4px' }}>
               Cancel
             </button>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-            >
+            <button type="submit" style={{ padding: '8px 16px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px' }}>
               {isLoading ? 'Adding...' : 'Add Shortcut'}
             </button>
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
