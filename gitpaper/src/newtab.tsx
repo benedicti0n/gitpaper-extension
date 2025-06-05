@@ -119,20 +119,35 @@ export default function NewTab() {
 
     const handleDrop = (item: ShortcutItem) => {
         // Remove from source side
-        if (item.side === 'left') {
-            const newLeftShortcuts = leftShortcuts.filter(s => s.id !== item.id);
-            setLeftShortcuts(newLeftShortcuts);
-        } else {
-            const newRightShortcuts = rightShortcuts.filter(s => s.id !== item.id);
-            setRightShortcuts(newRightShortcuts);
-        }
+        const removeFromSource = () => {
+            if (item.side === 'left') {
+                const newLeftShortcuts = leftShortcuts.filter(s => s.id !== item.id);
+                setLeftShortcuts(newLeftShortcuts);
+            } else {
+                const newRightShortcuts = rightShortcuts.filter(s => s.id !== item.id);
+                setRightShortcuts(newRightShortcuts);
+            }
+        };
 
         // Add to target side
-        if (item.side === 'left') {
-            setRightShortcuts([...rightShortcuts, item]);
-        } else {
-            setLeftShortcuts([...leftShortcuts, item]);
-        }
+        const addToTarget = () => {
+            const newItem = { ...item };
+            newItem.side = item.side === 'left' ? 'right' : 'left';
+
+            if (item.side === 'left') {
+                // Add to right side
+                const newRightShortcuts = [...rightShortcuts, newItem];
+                setRightShortcuts(newRightShortcuts);
+            } else {
+                // Add to left side
+                const newLeftShortcuts = [...leftShortcuts, newItem];
+                setLeftShortcuts(newLeftShortcuts);
+            }
+        };
+
+        // First remove from source, then add to target
+        removeFromSource();
+        addToTarget();
     };
 
     return (

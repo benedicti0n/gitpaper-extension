@@ -9,7 +9,7 @@ export type ShortcutItem = {
   label: string;
   url: string;
   icon: string;
-  side?: 'left' | 'right';
+  side: 'left' | 'right';
 };
 
 interface ShortcutProps {
@@ -222,7 +222,12 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
           aria-label="Shortcut options"
           aria-expanded={isMenuOpen}
         >
-          <Menu />
+          <Menu
+            style={{
+              width: '12px',
+              height: '12px',
+            }}
+          />
         </button>
         {isMenuOpen && (
           <div className="dropdown-menu" role="menu">
@@ -246,6 +251,7 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
 };
 
 const Shortcut: React.FC<ShortcutProps> = (props) => {
+  const MAX_ITEMS = 4;
   const {
     side,
     shortcuts,
@@ -282,12 +288,14 @@ const Shortcut: React.FC<ShortcutProps> = (props) => {
           onDrop={onDrop}
         />
       ))}
-      <button
-        onClick={onAddClick}
-        className="add-shortcut-button"
-      >
-        ➕
-      </button>
+      {shortcuts.length < MAX_ITEMS && (
+        <button
+          onClick={onAddClick}
+          className="add-shortcut-button"
+        >
+          ➕
+        </button>
+      )}
     </div>
   );
 };
