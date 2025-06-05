@@ -52,18 +52,6 @@ const AddShortcutModal: React.FC<AddShortcutModalProps> = ({ isOpen, onClose, on
       return;
     }
 
-    onAdd({
-      label: title.trim(),
-      url: url.trim(),
-      icon: iconUrl || ''
-    });
-
-    // Reset form
-    setTitle('');
-    setUrl('');
-    setIconUrl('');
-    onClose();
-
     try {
       // Ensure URL has protocol
       const formattedUrl = url.startsWith('http') ? url : `https://${url}`;

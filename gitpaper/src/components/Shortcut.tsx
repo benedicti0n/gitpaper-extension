@@ -8,19 +8,26 @@ export type ShortcutItem = {
   label: string;
   url: string;
   icon: string;
+  side?: 'left' | 'right';
 };
 
 interface ShortcutProps {
-  side?: 'left' | 'right';
-  shortcuts?: ShortcutItem[];
-  setShortcuts?: (shortcuts: ShortcutItem[]) => void;
+  side: 'left' | 'right';
+  shortcuts: ShortcutItem[];
+  setShortcuts: (shortcuts: ShortcutItem[]) => void;
   onAddClick?: () => void;
+  onDragStart?: (item: ShortcutItem) => void;
+  onDrop?: (item: ShortcutItem) => void;
 }
 
 interface DragItem {
   id: string;
   index: number;
   type: string;
+  side: 'left' | 'right';
+  url: string;
+  label: string;
+  icon: string;
 }
 
 interface ShortcutItemComponentProps {
@@ -28,22 +35,38 @@ interface ShortcutItemComponentProps {
   index: number;
   moveItem?: (dragIndex: number, hoverIndex: number) => void;
   onRemove?: (id: string) => void;
+  side: 'left' | 'right';
+  onDragStart?: (item: ShortcutItem) => void;
+  onDrop?: (item: ShortcutItem) => void;
 }
 
-const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, index, moveItem, onRemove }) => {
+const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, index, moveItem, onRemove, side, onDragStart, onDrop }) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.SHORTCUT,
-    item: { type: ItemTypes.SHORTCUT, id: item.id, index },
+    item: () => ({
+      type: ItemTypes.SHORTCUT,
+      id: item.id,
+      index,
+      side,
+      ...item
+    }),
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
-    }),
-    canDrag: !!moveItem, // Only allow dragging if moveItem is provided
+    })
   });
 
-  const [, drop] = useDrop<DragItem, void, { isOver: boolean }>({
+  const [, drop] = useDrop({
     accept: ItemTypes.SHORTCUT,
+    drop: (item: ShortcutItem) => {
+      if (item.side !== side && onDrop) {
+        onDrop(item);
+      }
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver()
+    }),
     hover: (item: DragItem, monitor) => {
       if (!ref.current || !moveItem) {
         return;
@@ -206,10 +229,12 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
 
 const Shortcut: React.FC<ShortcutProps> = (props) => {
   const {
-    side = 'left',
-    shortcuts = [],
-    setShortcuts = () => { },
-    onAddClick = () => { }
+    side,
+    shortcuts,
+    setShortcuts,
+    onAddClick = () => { },
+    onDragStart = () => { },
+    onDrop = () => { }
   } = props;
   const moveItem = useCallback((dragIndex: number, hoverIndex: number) => {
     const dragItem = shortcuts[dragIndex];
@@ -234,6 +259,9 @@ const Shortcut: React.FC<ShortcutProps> = (props) => {
           item={item}
           moveItem={moveItem}
           onRemove={handleRemove}
+          side={side}
+          onDragStart={onDragStart}
+          onDrop={onDrop}
         />
       ))}
       <button

@@ -19,6 +19,7 @@ export default function NewTab() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [leftShortcuts, setLeftShortcuts] = useState<ShortcutItem[]>([]);
     const [rightShortcuts, setRightShortcuts] = useState<ShortcutItem[]>([]);
+    const [draggingItem, setDraggingItem] = useState<ShortcutItem | null>(null);
     const [modalSide, setModalSide] = useState<ShortcutSide>('left');
 
     const theme = useGetTheme()
@@ -111,6 +112,29 @@ export default function NewTab() {
         setCurrentPalette(theme)
     }, [theme])
 
+    const handleDragStart = (item: ShortcutItem) => {
+        // Store the item being dragged
+        setDraggingItem(item);
+    };
+
+    const handleDrop = (item: ShortcutItem) => {
+        // Remove from source side
+        if (item.side === 'left') {
+            const newLeftShortcuts = leftShortcuts.filter(s => s.id !== item.id);
+            setLeftShortcuts(newLeftShortcuts);
+        } else {
+            const newRightShortcuts = rightShortcuts.filter(s => s.id !== item.id);
+            setRightShortcuts(newRightShortcuts);
+        }
+
+        // Add to target side
+        if (item.side === 'left') {
+            setRightShortcuts([...rightShortcuts, item]);
+        } else {
+            setLeftShortcuts([...leftShortcuts, item]);
+        }
+    };
+
     return (
         <DndProvider backend={HTML5Backend}>
             <div
@@ -135,6 +159,8 @@ export default function NewTab() {
                         side="left"
                         shortcuts={leftShortcuts}
                         setShortcuts={setLeftShortcuts}
+                        onDragStart={handleDragStart}
+                        onDrop={handleDrop}
                         onAddClick={() => {
                             setModalSide('left');
                             setIsModalOpen(true);
@@ -176,6 +202,8 @@ export default function NewTab() {
                         side="right"
                         shortcuts={rightShortcuts}
                         setShortcuts={setRightShortcuts}
+                        onDragStart={handleDragStart}
+                        onDrop={handleDrop}
                         onAddClick={() => {
                             setModalSide('right');
                             setIsModalOpen(true);
