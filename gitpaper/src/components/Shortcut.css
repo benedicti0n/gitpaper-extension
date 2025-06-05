@@ -2,12 +2,11 @@
 .shortcut-container {
   max-height: 73%;
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
-  gap: 20px;
   z-index: 10;
   margin: 1.5rem 10px 0px 10px;
   position: relative;
-  border: 1px solid red;
 }
 
 /* Shortcut Item */
@@ -17,9 +16,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 0px;
   width: 80px;
   height: 80px;
-  /* padding: 10px; */
   border-radius: 8px;
   position: relative;
   transition: all 0.2s ease;
@@ -142,28 +141,32 @@
   top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.1);
   padding: 2px 10px;
   border-radius: 10px;
   font-size: 12px;
-  color: white;
+  color: black;
   text-transform: capitalize;
 }
 
 /* Add Shortcut Button */
 .add-shortcut-button {
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 2px dashed white;
-  color: white;
-  border-radius: 16px;
-  padding: 12px;
-  min-width: 80px;
-  font-size: 18px;
-  margin-top: auto;
-  transition: all 0.2s;
+  background-color: rgba(0, 0, 0, 0.1);
+  border: 2px dashed rgba(0, 0, 0, 0.3);
+  color: black;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 20px;
+  transition: all 0.3s ease;
+  margin: 0;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .add-shortcut-button:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.2);
 }

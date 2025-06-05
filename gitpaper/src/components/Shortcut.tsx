@@ -2,6 +2,7 @@ import React, { useRef, useCallback, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from '~constants/itemTypes';
 import './Shortcut.css';
+import { Menu } from 'lucide-react';
 
 export type ShortcutItem = {
   id: string;
@@ -169,28 +170,49 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
         opacity,
       }}
     >
-      <img
-        src={item.icon}
-        alt={item.label}
-        style={{
-          width: '32px',
-          height: '32px',
-          borderRadius: '4px',
-          objectFit: 'contain',
-        }}
-      />
       <a
         href={item.url}
         style={{
-          color: 'white',
           textDecoration: 'none',
-          fontSize: "16px",
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
         }}
       >
-        {item.label}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          gap: '4px',
+          width: '100%',
+          padding: '8px',
+          boxSizing: 'border-box'
+        }}>
+          <img
+            src={item.icon}
+            alt={item.label}
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '4px',
+              objectFit: 'contain',
+            }}
+          />
+          <h1
+            style={{
+              color: 'white',
+              fontSize: "12px",
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              margin: 0,
+              flex: 1
+            }}
+          >
+            {item.label}
+          </h1>
+        </div>
       </a>
       <div className="menu-container" ref={menuRef}>
         <button
@@ -200,11 +222,7 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
           aria-label="Shortcut options"
           aria-expanded={isMenuOpen}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="6" r="2" fill="currentColor" />
-            <circle cx="12" cy="12" r="2" fill="currentColor" />
-            <circle cx="12" cy="18" r="2" fill="currentColor" />
-          </svg>
+          <Menu />
         </button>
         {isMenuOpen && (
           <div className="dropdown-menu" role="menu">
