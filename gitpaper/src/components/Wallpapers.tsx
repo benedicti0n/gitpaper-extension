@@ -21,10 +21,23 @@ export default function Wallpapers() {
     window.location.reload()
   }
 
+  const handleRefetch = async () => {
+    setloading(true)
+    try {
+      const data = await fetchWallpapers(userId, true) // Force refresh
+      setWallpapers(data)
+    } catch (error) {
+      alert("error fetching wallpapers")
+      console.log(error)
+    } finally {
+      setloading(false)
+    }
+  }
+
   async function fetchHandler() {
     setloading(true)
     try {
-      const data = await fetchWallpapers(userId)
+      const data = await fetchWallpapers(userId) // Will use cache if available
       setWallpapers(data)
     } catch (error) {
       alert("error fetching wallpapers")
@@ -44,13 +57,22 @@ export default function Wallpapers() {
 
   return (
     <div className="w-full h-full flex items-center flex-col text-lg px-6 space-y-6 relative">
-      <Button
-        variant="outline"
-        onClick={handleLogout}
-        className="absolute top-4 right-4 px-4 py-2 rounded-lg"
-      >
-        Logout
-      </Button>
+      <div className="absolute top-4 right-4 flex gap-2">
+        <Button
+          variant="outline"
+          onClick={handleRefetch}
+          className="px-4 py-2 rounded-lg"
+        >
+          Refresh
+        </Button>
+        <Button
+          variant="outline"
+          onClick={handleLogout}
+          className="px-4 py-2 rounded-lg"
+        >
+          Logout
+        </Button>
+      </div>
 
       <h1 className="text-2xl font-semibold flex justify-center items-center mt-6">
         <span className="font-bold ml-1">Your Wallpapers</span>
