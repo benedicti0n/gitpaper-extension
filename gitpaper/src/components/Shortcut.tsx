@@ -41,7 +41,15 @@ interface ShortcutItemComponentProps {
   onDrop?: (item: ShortcutItem) => void;
 }
 
-const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, index, moveItem, onRemove, side, onDragStart, onDrop }) => {
+const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({
+  item,
+  index,
+  moveItem,
+  onRemove,
+  side,
+  onDragStart,
+  onDrop
+}) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag({
@@ -60,41 +68,27 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
 
   const [, drop] = useDrop({
     accept: ItemTypes.SHORTCUT,
-    drop: (item: ShortcutItem) => {
-      if (item.side !== side && onDrop) {
-        onDrop(item);
+    drop: (draggedItem: ShortcutItem) => {
+      if (draggedItem.side !== side && onDrop) {
+        onDrop(draggedItem);
       }
     },
-    collect: (monitor) => ({
-      isOver: monitor.isOver()
-    }),
-    hover: (item: DragItem, monitor) => {
-      if (!ref.current || !moveItem) {
-        return;
-      }
-      const dragIndex = item.index;
+    hover: (draggedItem: DragItem, monitor) => {
+      if (!ref.current || !moveItem) return;
+      const dragIndex = draggedItem.index;
       const hoverIndex = index;
+      if (dragIndex === hoverIndex) return;
 
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const hoverRect = ref.current.getBoundingClientRect();
+      const hoverMiddleY = (hoverRect.bottom - hoverRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
-      const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
+      const hoverClientY = (clientOffset?.y ?? 0) - hoverRect.top;
 
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
 
-      if (moveItem) {
-        moveItem(dragIndex, hoverIndex);
-        item.index = hoverIndex;
-      }
+      moveItem(dragIndex, hoverIndex);
+      draggedItem.index = hoverIndex;
     },
   });
 
@@ -110,19 +104,7 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
 
   const handleMenuToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const newIsOpen = !isMenuOpen;
-    setIsMenuOpen(newIsOpen);
-
-    if (newIsOpen && menuButtonRef.current) {
-      const rect = menuButtonRef.current.getBoundingClientRect();
-      if (menuRef.current) {
-        menuRef.current.style.setProperty('--menu-top', `${rect.bottom + window.scrollY}px`);
-        menuRef.current.style.setProperty('--menu-left', `${rect.left + window.scrollX}px`);
-        menuRef.current.dataset.visible = 'true';
-      }
-    } else if (menuRef.current) {
-      menuRef.current.dataset.visible = 'false';
-    }
+    setIsMenuOpen((prev) => !prev);
   };
 
   const handleAction = (e: React.MouseEvent, action: string) => {
@@ -130,32 +112,24 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
     setIsMenuOpen(false);
 
     switch (action) {
-      case 'edit':
-        // Handle edit action
-        console.log('Edit:', item.id);
-        break;
       case 'open':
         window.open(item.url, '_blank');
         break;
       case 'private':
-        window.open(item.url, '_blank', 'private');
+        window.open(item.url, '_blank', 'noopener,noreferrer');
         break;
       case 'delete':
-        if (onRemove) {
-          onRemove(item.id);
-        }
+        onRemove?.(item.id);
         break;
     }
   };
 
-  // Close menu when clicking outside
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -166,9 +140,7 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
     <div
       ref={dragDropRef}
       className="shortcut-item"
-      style={{
-        opacity,
-      }}
+      style={{ opacity }}
     >
       <a
         href={item.url}
@@ -231,9 +203,6 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
         </button>
         {isMenuOpen && (
           <div className="dropdown-menu" role="menu">
-            <button onClick={(e) => handleAction(e, 'edit')}>
-              <span>Edit</span>
-            </button>
             <button onClick={(e) => handleAction(e, 'open')}>
               <span>Open in new window</span>
             </button>
@@ -250,32 +219,29 @@ const ShortcutItemComponent: React.FC<ShortcutItemComponentProps> = ({ item, ind
   );
 };
 
-const Shortcut: React.FC<ShortcutProps> = (props) => {
+const Shortcut: React.FC<ShortcutProps> = ({
+  side,
+  shortcuts,
+  setShortcuts,
+  onAddClick = () => { },
+  onDragStart = () => { },
+  onDrop = () => { }
+}) => {
   const MAX_ITEMS = 4;
-  const {
-    side,
-    shortcuts,
-    setShortcuts,
-    onAddClick = () => { },
-    onDragStart = () => { },
-    onDrop = () => { }
-  } = props;
+
   const moveItem = useCallback((dragIndex: number, hoverIndex: number) => {
-    const dragItem = shortcuts[dragIndex];
-    const newItems = [...shortcuts];
-    newItems.splice(dragIndex, 1);
-    newItems.splice(hoverIndex, 0, dragItem);
-    setShortcuts(newItems);
+    const updated = [...shortcuts];
+    const [movedItem] = updated.splice(dragIndex, 1);
+    updated.splice(hoverIndex, 0, movedItem);
+    setShortcuts(updated);
   }, [shortcuts, setShortcuts]);
 
   const handleRemove = useCallback((id: string) => {
-    setShortcuts?.(shortcuts.filter((item) => item.id !== id));
+    setShortcuts(shortcuts.filter((item) => item.id !== id));
   }, [shortcuts, setShortcuts]);
 
   return (
-    <div
-      className="shortcut-container"
-    >
+    <div className="shortcut-container">
       {shortcuts.map((item, index) => (
         <ShortcutItemComponent
           key={item.id}
@@ -289,10 +255,7 @@ const Shortcut: React.FC<ShortcutProps> = (props) => {
         />
       ))}
       {shortcuts.length < MAX_ITEMS && (
-        <button
-          onClick={onAddClick}
-          className="add-shortcut-button"
-        >
+        <button onClick={onAddClick} className="add-shortcut-button">
           ➕
         </button>
       )}
